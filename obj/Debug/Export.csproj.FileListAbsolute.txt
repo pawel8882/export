@@ -1,0 +1,10 @@
+C:\Users\p.makarczuk\source\repos\Export\bin\Debug\Export.exe.config
+C:\Users\p.makarczuk\source\repos\Export\bin\Debug\Export.exe
+C:\Users\p.makarczuk\source\repos\Export\bin\Debug\Export.pdb
+C:\Users\p.makarczuk\source\repos\Export\obj\Debug\Export.csprojAssemblyReference.cache
+C:\Users\p.makarczuk\source\repos\Export\obj\Debug\Export.Form1.resources
+C:\Users\p.makarczuk\source\repos\Export\obj\Debug\Export.Properties.Resources.resources
+C:\Users\p.makarczuk\source\repos\Export\obj\Debug\Export.csproj.GenerateResource.cache
+C:\Users\p.makarczuk\source\repos\Export\obj\Debug\Export.csproj.CoreCompileInputs.cache
+C:\Users\p.makarczuk\source\repos\Export\obj\Debug\Export.exe
+C:\Users\p.makarczuk\source\repos\Export\obj\Debug\Export.pdb
