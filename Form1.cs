@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Tekla.Structures;
 using Tekla.Structures.Model;
 using Tekla.Structures.Geometry3d;
 using Tekla.Structures.Model.UI;
 using System.Collections;
 using Tekla.Structures.Filtering;
 using Tekla.Structures.Filtering.Categories;
+using Tekla.Structures.Drawing;
 
 namespace Export
 {
@@ -75,8 +77,25 @@ namespace Export
             //ModelObjectEnumerator.AutoFetch = true;
             ModelObjectEnumerator objekty = MyModel.GetModelObjectSelector().GetObjectsByFilter(bexpcoll);
             ModelObjectEnumerator objekty2 = MyModel.GetModelObjectSelector().GetObjectsByFilter(bexpcoll2);
-            textBox5.Text = Convert.ToString(objekty.GetSize());
-            textBox4.Text = Convert.ToString(objekty2.GetSize());
+            //textBox5.Text = Convert.ToString(objekty.GetSize());
+            //textBox4.Text = Convert.ToString(objekty2.GetSize());
+
+            DrawingHandler DrawingHandler2 = new DrawingHandler();
+            DrawingEnumerator rysunki = DrawingHandler2.GetDrawings();
+            
+            List<Drawing> drawings = new List<Drawing>();
+            foreach (Drawing drawing in rysunki)
+                drawings.Add(drawing);
+            List<Drawing> assembly_drawings = new List<Drawing>(drawings.OfType<AssemblyDrawing>());
+            List<Drawing> part_drawings = new List<Drawing>(drawings.OfType<SinglePartDrawing>());
+
+            
+            textBox4.Text = Convert.ToString(assembly_drawings.Count);
+
+
+            objekty.MoveNext();
+            textBox5.Text = Convert.ToString(objekty.Current.Identifier);
+
 
 
 
