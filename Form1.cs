@@ -90,17 +90,21 @@ namespace Export
             Directory.CreateDirectory(folder_dwa + "\\PDF\\Elementy");
 
 
-            List<Drawing> zespoly_faza_rysunki = new List<Drawing>(lista_rysunkow_zespoly(zespoly_faza, zespoly_rysunki));
-            List<Drawing> party_faza_rysunki = new List<Drawing>(lista_rysunkow_elementy(party_faza, party_rysunki));
+            //List<Drawing> zespoly_faza_rysunki_beta = new List<Drawing>(lista_rysunkow_zespoly(zespoly_faza, zespoly_rysunki));
+            //List<Drawing> party_faza_rysunki_beta = new List<Drawing>(lista_rysunkow_elementy(party_faza, party_rysunki));
+
+            //zespoly_faza_rysunki = zespoly_faza_rysunki_beta;
+            //party_faza_rysunki = party_faza_rysunki_beta;
 
 
 
-            //tworzy NC
-            nc_export(part_list);
             //tworzy raporty
             raporty(party_faza, zespoly_faza);
 
-            druk_pdf(zespoly_faza_rysunki, party_faza_rysunki);
+            //tworzy NC
+            nc_export(part_list);
+
+            
 
         }
 
@@ -146,12 +150,12 @@ namespace Export
             DrawingEnumerator rysunki = DrawingHandler2.GetDrawings();
 
 
-            List<Drawing> drawings = new List<Drawing>();
+           /* List<Drawing> drawings = new List<Drawing>();
             foreach (Drawing drawing in rysunki)
                 drawings.Add(drawing);
             List<Drawing> assembly_drawings = new List<Drawing>(drawings.OfType<AssemblyDrawing>()); zespoly_rysunki = assembly_drawings;
             List<Drawing> part_drawings = new List<Drawing>(drawings.OfType<SinglePartDrawing>()); party_rysunki = part_drawings;
-
+           */
 
             List<Tekla.Structures.Model.ModelObject> zespoly_wmodelu = new List<Tekla.Structures.Model.ModelObject>();
             foreach (Tekla.Structures.Model.ModelObject zespol in objekty)
@@ -160,6 +164,15 @@ namespace Export
             List<Tekla.Structures.Model.ModelObject> party_wmodelu = new List<Tekla.Structures.Model.ModelObject>();
             foreach (Tekla.Structures.Model.ModelObject part in objekty2)
                 party_wmodelu.Add(part); party_faza = party_wmodelu;
+
+            ModelInfo info = MyModel.GetInfo();
+            int faza_spr = info.CurrentPhase;
+
+            if (faza_wpisana != Convert.ToString(faza_spr))
+                MessageBox.Show("Zmień aktualną fazę!");
+            else
+                MessageBox.Show("Faza wczytana.");
+
 
             MyModel.CommitChanges();
         }
@@ -170,6 +183,7 @@ namespace Export
             p = MyModel.GetProjectInfo().ProjectNumber;
 
             string pattern = "(\\W)";
+            /*
             DrawingHandler DHP = new DrawingHandler();
             DPMPrinterAttributes dpmprint = new DPMPrinterAttributes();
             dpmprint.OutputType = DotPrintOutputType.PDF;
@@ -181,7 +195,7 @@ namespace Export
                 DHP.PrintDrawing(pdf, dpmprint);
             }
 
-            //elementy
+            elementy
             foreach (Drawing pdf in elementy)
             {
                 dpmprint.OutputFileName = folder_dwa + "\\PDF\\Elementy\\" + p + "_W_" + Regex.Replace(pdf.Mark, pattern, String.Empty) +" - " + pdf.Name + ".pdf";
@@ -197,24 +211,48 @@ namespace Export
             dpmprint.PrintToMultipleSheet = DotPrintToMultipleSheet.LeftToRightAndTopToBottom;
             dpmprint.OutputFileName = folder_dwa + "\\PDF\\Elementy\\" + "FAZA " + faza + " - rysunki elementów" + ".pdf";
             DHP.PrintDrawings(elementy, dpmprint);
-
-            /*
-            DrawingHandler2.SetActiveDrawing(assembly_drawings.ElementAt(1));
-            installLoc = Tekla.Structures.Dialog.StructuresInstallation.InstallFolder;
-            printerLocation = installLoc + @"nt\bin\applications\Tekla\Model\DPMPrinter\DPMPrinterCommand.exe";
-            var arg = string.Format("printActive:true printer:pdf colormode:BlackAndWhite paper:Auto out:\"D:\\{0}.pdf\"", assembly_drawings.ElementAt(1).Mark + "_" + assembly_drawings.ElementAt(1).Name);
-            Console.WriteLine("Args = '{0}'", arg);
-            var process = new System.Diagnostics.Process();
-            process.StartInfo.FileName = printerLocation;
-            process.StartInfo.Arguments = arg;
-            process.StartInfo.WorkingDirectory = "D:\\";
-            process.StartInfo.UseShellExecute = false;
-            process.StartInfo.RedirectStandardOutput = true;
-            process.OutputDataReceived += (sender2, args) => Console.WriteLine("received output: {0}", args.Data);
-            process.Start();
-            process.BeginOutputReadLine();
-            process.WaitForExit();
             */
+
+
+            //foreach (Drawing pdf in zespoly)
+            
+                //DrawingHandler2.SetActiveDrawing(pdf);
+                var installLoc = Tekla.Structures.Dialog.StructuresInstallation.InstallFolder;
+                var printerLocation = installLoc + @"nt\bin\applications\Tekla\Model\DPMPrinter\DPMPrinterCommand.exe";
+                var arg = string.Format("dpm:selected colormode:BlackAndWhite printer:PDF paper:Auto out:\"{0}.pdf\" settingsFile:D:\\pdf.PdfPrintOptions.xml", "D:\\test");
+                Console.WriteLine("Args = '{0}'", arg);
+                var process = new System.Diagnostics.Process();
+                process.StartInfo.FileName = printerLocation;
+                process.StartInfo.Arguments = arg;
+                process.StartInfo.WorkingDirectory = "D:\\";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.OutputDataReceived += (sender2, args) => Console.WriteLine("received output: {0}", args.Data);
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+            
+
+
+            /*foreach (Drawing pdf in elementy)
+            {
+                DrawingHandler2.SetActiveDrawing(pdf);
+                var installLoc = Tekla.Structures.Dialog.StructuresInstallation.InstallFolder;
+                var printerLocation = installLoc + @"nt\bin\applications\Tekla\Model\DPMPrinter\DPMPrinterCommand.exe";
+                var arg = string.Format("printActive:true printer:pdf colormode:BlackAndWhite paper:Auto out:\"{0}.pdf\" settingsFile:D:\\pdf.PdfPrintOptions.xml", folder_dwa + "\\PDF\\Elementy\\" + p + "_W_" + Regex.Replace(pdf.Mark, pattern, String.Empty) + " - " + pdf.Name);
+                Console.WriteLine("Args = '{0}'", arg);
+                var process = new System.Diagnostics.Process();
+                process.StartInfo.FileName = printerLocation;
+                process.StartInfo.Arguments = arg;
+                process.StartInfo.WorkingDirectory = folder_dwa + "\\PDF\\Elementy\\";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.OutputDataReceived += (sender2, args) => Console.WriteLine("received output: {0}", args.Data);
+                process.Start();
+                process.BeginOutputReadLine();
+                process.WaitForExit();
+            }*/
+
 
 
         }
@@ -230,6 +268,8 @@ namespace Export
             ArrayList party2 = new ArrayList();
             foreach (Tekla.Structures.Model.ModelObject modelob2 in party)
                 party2.Add(modelob2);
+
+            part_list = party2;
 
             Tekla.Structures.Model.UI.ModelObjectSelector MS = new Tekla.Structures.Model.UI.ModelObjectSelector();
             MS.Select(assembly2);
@@ -254,10 +294,12 @@ namespace Export
         {
             Tekla.Structures.Model.UI.ModelObjectSelector MS = new Tekla.Structures.Model.UI.ModelObjectSelector();
             MS.Select(nc);
-            string folder_nc = folder_dwa + "\\NC\\";
-            Operation.CreateNCFilesFromSelected("Blachy", folder_nc + "NC-Blachy\\");
-            Operation.CreateNCFilesFromSelected("Profile", folder_nc + "NC-Profile\\");
-            Operation.CreateNCFilesFromSelected("Blachy do DXF", folder_dwa + "\\DXF\\");
+            string folder_nc = folder_dwa + "\\NC";
+            string folder_dxf = MyModel.GetInfo().ModelPath + "\\NC files all\\";
+            Operation.CreateNCFilesFromSelected("Blachy", folder_nc + "\\NC-Blachy\\");
+            Operation.CreateNCFilesFromSelected("Profile", folder_nc + "\\NC-Profile\\");
+            Operation.CreateNCFilesFromSelected("Blachy do DXF", folder_dxf);
+            Operation.CreateMISFileFromSelected(Operation.MISExportTypeEnum.DSTV, folder_nc + "\\MIS_LIST_" + faza);
         }
 
         private void dwg_export_zespoly(List<Drawing> zespoly)
@@ -338,7 +380,46 @@ namespace Export
 
             return lista_part;
         }
-        
+
+        private void lista_materialowa(string faza)
+        {
+            ObjectFilterExpressions.Type obj1 = new ObjectFilterExpressions.Type();
+            NumericConstantFilterExpression type2 = new NumericConstantFilterExpression(Tekla.Structures.TeklaStructuresDatabaseTypeEnum.PART);
+            string faza_wpisana = faza;
+            AssemblyFilterExpressions.Phase exp1 = new AssemblyFilterExpressions.Phase();
+            StringConstantFilterExpression faza_filter = new StringConstantFilterExpression(faza_wpisana);
+            BinaryFilterExpression bexp = new BinaryFilterExpression(exp1, StringOperatorType.IS_EQUAL, faza_filter);
+            BinaryFilterExpression bexp3 = new BinaryFilterExpression(obj1, NumericOperatorType.IS_EQUAL, type2);
+
+            BinaryFilterExpressionCollection bexpcoll2 = new BinaryFilterExpressionCollection();
+            bexpcoll2.Add(new BinaryFilterExpressionItem(bexp, BinaryFilterOperatorType.BOOLEAN_AND));
+            bexpcoll2.Add(new BinaryFilterExpressionItem(bexp3, BinaryFilterOperatorType.BOOLEAN_AND));
+
+            ModelObjectEnumerator objekty2 = MyModel.GetModelObjectSelector().GetObjectsByFilter(bexpcoll2);
+
+            textBox4.Text = Convert.ToString(objekty2.GetSize());
+
+            ArrayList party_wmodelu = new ArrayList();
+            foreach (Tekla.Structures.Model.ModelObject part in objekty2)
+                party_wmodelu.Add(part);
+
+            Tekla.Structures.Model.UI.ModelObjectSelector MS = new Tekla.Structures.Model.UI.ModelObjectSelector();
+            MS.Select(party_wmodelu);
+
+            MS.Select(party_wmodelu);
+            Directory.CreateDirectory(location + "\\" + faza + " - " + nazwa + "\\");
+            Operation.CreateReportFromSelected("001 - Raport elementów konstrukcji stalowych", location + "\\" + faza + " - " + nazwa + "\\" + "R-" + faza + "_001 - Raport elementów konstrukcji stalowych" + " - FAZA " + faza + ".xsr", "", faza, rev);
+            Operation.CreateReportFromSelected("001 - Raport elementów konstrukcji stalowych.pdf", location + "\\" + faza + " - " + nazwa + "\\" + "R-" + faza + "_001 - Raport elementów konstrukcji stalowych" + " - FAZA " + faza + ".pdf", "", faza, rev);
+            Operation.CreateReportFromSelected("001 - Raport elementów konstrukcji stalowych.xls", location + "\\" + faza + " - " + nazwa + "\\" + "R-" + faza + "_001 - Raport elementów konstrukcji stalowych" + " - FAZA " + faza + ".xls", "", faza, rev);
+
+            System.Threading.Thread.Sleep(3000);
+
+            File.Delete(location + "\\" + faza + " - " + nazwa + "\\" +"R-" + faza + "_001 - Raport elementów konstrukcji stalowych" + " - FAZA " + faza + ".pdf" + ".dpm");
+
+            
+        }
+
+
 
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -378,5 +459,26 @@ namespace Export
             Operation.CreateReportFromSelected("004 - Lista rysunków.pdf", folder_listy + "R-" + faza + "_004 - Lista rysunków" + " - FAZA " + faza + ".pdf", "", faza, rev);
             Operation.CreateReportFromSelected("004 - Lista rysunków.xls", folder_listy + "R-" + faza + "_004 - Lista rysunków" + " - FAZA " + faza + ".xls", "", faza, rev);
         }
+
+        private void button7_Click(object sender, EventArgs e)
+        {
+
+            druk_pdf(zespoly_faza_rysunki, party_faza_rysunki);
+
+        }
+
+        private void button8_Click(object sender, EventArgs e)
+        {
+            lista_materialowa(faza);
+        }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+
+            string folder_listy = folder_dwa + "\\";
+            Operation.CreateReportFromSelected("006 - Raport zmian", folder_listy + "R-" + faza + "_006 - Raport zmian" + " - FAZA " + faza + ".xsr", "", faza, rev);
+        }
+
     }
+   
 }

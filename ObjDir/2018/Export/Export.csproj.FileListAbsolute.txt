@@ -1,0 +1,10 @@
+C:\Users\p.makarczuk\Source\Repos\export_git\bin\Debug\Export.exe.config
+C:\Users\p.makarczuk\Source\Repos\export_git\bin\Debug\Export.exe
+C:\Users\p.makarczuk\Source\Repos\export_git\bin\Debug\Export.pdb
+C:\Users\p.makarczuk\Source\Repos\export_git\ObjDir\2018\Export\Export.csprojAssemblyReference.cache
+C:\Users\p.makarczuk\Source\Repos\export_git\ObjDir\2018\Export\Export.Form1.resources
+C:\Users\p.makarczuk\Source\Repos\export_git\ObjDir\2018\Export\Export.Properties.Resources.resources
+C:\Users\p.makarczuk\Source\Repos\export_git\ObjDir\2018\Export\Export.csproj.GenerateResource.cache
+C:\Users\p.makarczuk\Source\Repos\export_git\ObjDir\2018\Export\Export.csproj.CoreCompileInputs.cache
+C:\Users\p.makarczuk\Source\Repos\export_git\ObjDir\2018\Export\Export.exe
+C:\Users\p.makarczuk\Source\Repos\export_git\ObjDir\2018\Export\Export.pdb
